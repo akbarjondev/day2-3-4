@@ -1,0 +1,20 @@
+.container {
+  max-width: 1200px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 0 auto;
+}
+
+.dark {
+  background-color: #333;
+  color: #ccc;
+}
+
+.light {
+  background-color: #fff;
+  color: #333;
+}
+
+.app {
+  background-color: red;
+}

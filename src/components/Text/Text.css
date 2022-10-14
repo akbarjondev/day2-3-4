@@ -1,0 +1,7 @@
+.text {
+  width: 50%;
+  min-height: 50px;
+  background-color: #ccc;
+  border: 2px solid red;
+  margin-bottom: 30px !important;
+}
