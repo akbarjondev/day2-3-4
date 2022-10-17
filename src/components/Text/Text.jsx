@@ -2,31 +2,23 @@ import React from "react";
 // import "./Text.css";
 import styles from "./Text.module.scss";
 
-function Text({ fontName, name, age, address, children, ...props }) {
+function Text({ news, setOneNews }) {
   return (
-    <div {...props} className={`${styles.text} ${styles[fontName]}`}>
-      <div>
-        Salom {name}, siz {age} yoshdasiz
-      </div>
-
-      {address && (
-        <address>
-          {address?.town}
-          {address?.street && address?.town && ", "}
-          {address?.street}
-        </address>
-      )}
-
-      {children && <div>Bu children matn: {children}</div>}
-    </div>
+    <ul className={`${styles.ul} ${styles.sansSerif}`}>
+      {news &&
+        news.length > 0 &&
+        news.map((item, index) => (
+          <li
+            onClick={() => setOneNews(item)}
+            key={`${item.category}-${index}`}
+            className={styles.li}
+          >
+            <h4>{item.title}</h4>
+            <p>{item.text}</p>
+          </li>
+        ))}
+    </ul>
   );
 }
 
 export default Text;
-
-// class Text extends React.Component {
-//   render() {
-//     console.log("Text render");
-//     return <div className="container text">Salom Ali</div>;
-//   }
-// }

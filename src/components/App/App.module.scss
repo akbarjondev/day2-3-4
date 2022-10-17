@@ -16,13 +16,11 @@
 }
 
 .app {
-  background-color: red;
-
-  strong {
-    font-size: 2rem;
-  }
+  font-family: monospace;
 }
 
-.form {
-  margin-top: 50px;
+.header {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #333;
 }

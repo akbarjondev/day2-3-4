@@ -1,52 +1,58 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./App.module.scss";
+import Text from "../Text/Text";
+import data from "./../../data/data";
+import Single from "../Single/Single";
 
 function App() {
-  let counter = useRef(0); // bu yerda shuncha qiymatni o'zida umurbod saqlab turmoqda
+  const [news, setNews] = useState(data);
+  const [theme, setTheme] = useState("world");
 
-  let mainRef = useRef(null); // bu yerda document.querySelector vazifasini bajarmoqda
+  const [singleData, setSingleData] = useState(null);
 
-  const usernameRef = useRef(null);
-  const passRef = useRef(null);
+  useEffect(() => {
+    setNews(data.filter((item) => item.category === theme));
+  }, [theme]);
 
-  const [status, setStatus] = useState("on");
+  useEffect(() => {
+    // bu componentDidMount ga teng
+    console.log("bu bir marotaba ishlaydi");
+  }, []);
 
-  const handleClick = () => {
-    counter.current++;
-    console.log(counter);
-  };
+  useEffect(() => {
+    // bu har safar state update bo'lganda ishlaydi (componentDidMount va componentDidUpdate ning qo'shilmasi)
+    console.log("bu har safar ishlaydi");
+  });
 
-  const changeStatus = () => {
-    setStatus(status === "on" ? "off" : "on");
-  };
+  useEffect(() => {
+    console.log("bu bir narsa");
+    if (singleData) {
+      return () => {
+        console.log("single uchib ketdi");
+      };
+    }
+  }, [singleData]);
 
-  console.log("render");
-
-  // useEffect(() => {
-  //   console.log(mainRef);
-  // }, []); // bu class componentdagi componentDidMount() ekvivalent
-
-  const handleForm = (event) => {
-    event.preventDefault();
-
-    console.log(usernameRef.current.value);
-    console.log(passRef.current.value);
+  const handleClick = (topic) => {
+    setTheme(topic);
+    setSingleData(null);
   };
 
   return (
-    <main ref={mainRef} className={styles.container}>
-      <h3>App: {status}</h3>
-      <div>
-        <button onClick={handleClick}>Click me</button>
-        <button onClick={changeStatus}>Re render me</button>
+    <div className={styles.app}>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <button onClick={() => handleClick("world")}>Global</button>
+          <button onClick={() => handleClick("local")}>Local</button>
+          <button onClick={() => handleClick("sport")}>Global</button>
+        </div>
+        {singleData ? (
+          <Single data={singleData} />
+        ) : (
+          <Text setOneNews={setSingleData} news={news} />
+        )}
       </div>
-
-      <form className={styles.form} onSubmit={handleForm}>
-        <input ref={usernameRef} type={"text"} placeholder={"username"} />
-        <input ref={passRef} type={"password"} placeholder={"password"} />
-        <button>Submit</button>
-      </form>
-    </main>
+    </div>
   );
 }
 
