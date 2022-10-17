@@ -1,58 +1,51 @@
 import React, { useState, useEffect } from "react";
 import styles from "./App.module.scss";
-import Text from "../Text/Text";
-import data from "./../../data/data";
-import Single from "../Single/Single";
+import { addCategory, getData } from "./../../api/api";
+// import
 
 function App() {
-  const [news, setNews] = useState(data);
-  const [theme, setTheme] = useState("world");
-
-  const [singleData, setSingleData] = useState(null);
-
-  useEffect(() => {
-    setNews(data.filter((item) => item.category === theme));
-  }, [theme]);
+  const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState(null);
 
   useEffect(() => {
-    // bu componentDidMount ga teng
-    console.log("bu bir marotaba ishlaydi");
-  }, []);
+    const data = getData();
+    data.then((res) => {
+      setCategories(res.data);
+    });
+  }, [category]);
 
-  useEffect(() => {
-    // bu har safar state update bo'lganda ishlaydi (componentDidMount va componentDidUpdate ning qo'shilmasi)
-    console.log("bu har safar ishlaydi");
-  });
-
-  useEffect(() => {
-    console.log("bu bir narsa");
-    if (singleData) {
-      return () => {
-        console.log("single uchib ketdi");
-      };
-    }
-  }, [singleData]);
-
-  const handleClick = (topic) => {
-    setTheme(topic);
-    setSingleData(null);
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    setLoading(true);
+    const data = addCategory(category);
+    data.then(() => {
+      setCategory("");
+      setLoading(false);
+    });
   };
 
   return (
-    <div className={styles.app}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <button onClick={() => handleClick("world")}>Global</button>
-          <button onClick={() => handleClick("local")}>Local</button>
-          <button onClick={() => handleClick("sport")}>Global</button>
-        </div>
-        {singleData ? (
-          <Single data={singleData} />
-        ) : (
-          <Text setOneNews={setSingleData} news={news} />
-        )}
-      </div>
-    </div>
+    <main className={styles.container}>
+      <h2>Star wars</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type={"text"}
+          onChange={(event) => setCategory(event.target.value)}
+          value={category}
+          placeholder={"category name"}
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <section>
+        {categories &&
+          categories.length > 0 &&
+          categories.map((category) => (
+            <div key={category.category_id}>{category.category_name}</div>
+          ))}
+      </section>
+      {loading && <strong>bu yerda spinner bo'lishi mumkin edi</strong>}
+    </main>
   );
 }
 
